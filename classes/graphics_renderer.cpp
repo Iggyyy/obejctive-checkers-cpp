@@ -40,5 +40,20 @@ void GraphicsRenderer::gr_add_sprite_to_rendering(sf::Sprite* sprite, int priori
     m_sprite_map[priority].push_back(sprite);
 }
 
+bool GraphicsRenderer::gr_remove_sprite_from_rendering(sf::Sprite* sprite)
+{
+    std::cerr<<"Endte"<<std::endl;
+    for(int i =0 ; i < m_sprite_map[1].size(); i++)
+    {
+        if(m_sprite_map[1][i] == sprite)
+            {
+                m_sprite_map[1].erase(m_sprite_map[1].begin() + i);
+                std::cerr<<"Erased sprite from rendering"<<std::endl;
+                return true;
+            }
+    }
+    return false;
+}
+
 
 

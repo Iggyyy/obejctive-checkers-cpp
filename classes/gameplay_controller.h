@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include "abstract_piece.h"
 #include "pieces.h"
 
@@ -12,18 +13,31 @@ class GameplayController
         //Game board containing references to pieces
         std::vector< std::vector<AbstractPiece*> > m_board;
         int m_eliminated_white_pieces = 0, m_eliminated_black_pieces = 0;
+        AbstractPiece* m_ref_to_dead_piece = nullptr;
         void set_reference_at_board(AbstractPiece* new_reference, int row, int col)
         {
+            std::cerr<<"setting ref to "<<new_reference->pi_get_piece_color()<<" at: (row, col) "<<row<<" "<<col<<std::endl;
             m_board[row][col] = new_reference;
         }
         AbstractPiece* get_reference_to_piece_at_board(int row, int col)
         {
-            return m_board[row][col];
+            std::cerr<<"Getting ref at row"<<col<<" col"<<row<<""<<std::endl;
+           
+            return m_board[col][row];
         }
         int get_board_size()
         {
             return m_board.size();
         }
+        bool is_tile_taken(std::pair<int, int> tile)
+        { 
+            
+            if (m_board[tile.second][tile.first]->pi_get_piece_color() == PieceColor::dummy)
+                return false;
+            std::cerr<<"Tile "<<tile.second<<" "<<tile.first<<" is taken"<<std::endl;
+            return true;
+        }
+
 
     protected:
         //clear all references from board
@@ -41,6 +55,8 @@ class GameplayController
         std::vector< std::vector<AbstractPiece*> > gc_get_board();
         //try to get piece at coords
         AbstractPiece* gc_try_to_get_piece_at_coords(sf::Vector2f coords); 
+        AbstractPiece* gc_get_dead_piece_pointer();
+        void gc_reset_dead_piece_pointer();
 
         GameplayController();
 };

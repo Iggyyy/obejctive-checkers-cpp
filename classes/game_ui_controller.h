@@ -16,6 +16,8 @@ class GameUiController
         std::pair<int, int> m_origin_tile;
         AbstractPiece* m_grabbed_piece;
         bool m_is_piece_grabbed = false;
+        //Whose turn is now, 1-black, -1white
+        int m_whose_turn = 1;
     protected:
         void update_mouse_coordinates();
         //Convert coords to row and col on board

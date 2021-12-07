@@ -17,7 +17,7 @@ class PieceWhite : public AbstractPiece
             //define color
             pi_set_piece_color(PieceColor::white);
             //define move direction
-            pi_set_move_direction(1);
+            pi_set_move_direction(-1);
             //load visuals
             pi_init_texture_and_sprite();
         }
@@ -38,7 +38,7 @@ class PieceBlack : public AbstractPiece
             //define color
             pi_set_piece_color(PieceColor::black);
             //define move direction
-            pi_set_move_direction(-1);
+            pi_set_move_direction(1);
             //load visuals
             pi_init_texture_and_sprite();
         }

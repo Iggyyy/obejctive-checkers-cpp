@@ -53,12 +53,6 @@ int main()
     std::cout<<"BOARD END"<<std::endl;
 
 
-    // PieceWhite pcw;
-    // pcw.pi_init_texture_and_sprite();
-    // graphicsRenderer.gr_add_sprite_to_rendering(pcw.pi_get_sprite(), pcw.pi_get_render_priority());
-
-    //b[9][0]->set_sprite_position(240, 120);
-    //graphicsRenderer.gr_add_sprite_to_rendering(b[9][0]->pi_get_sprite(), 1);
 
     while (window.isOpen())
     {
