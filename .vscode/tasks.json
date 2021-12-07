@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: g++.exe build active file",
+			"command": "C:/mingw730/mingw32/bin/g++.exe",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"${fileDirname}\\*.cpp",
+				"${fileDirname}\\classes\\*.cpp",
+				"-o",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				"-lsfml-graphics-d",
+				"-lsfml-window-d",
+				"-lsfml-system-d"
+			],
+			"options": {
+				"cwd": "C:/mingw730/mingw32/bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "compiler: C:/mingw730/mingw32/bin/g++.exe"
+		}
+	]
+}
