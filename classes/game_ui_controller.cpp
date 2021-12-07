@@ -23,7 +23,6 @@ sf::Sprite* load_spirite_and_texture(std::string path)
     return sprite;
 }
 
-
 void GameUiController::load_board_tiles_and_add_to_render()
 {
     for(int i =0; i<10; i++)
@@ -47,6 +46,18 @@ void GameUiController::load_board_tiles_and_add_to_render()
     }
 }
 
+void GameUiController::highlight_tile(std::pair<int, int> tile)
+{
+    sf::Sprite* sp = load_spirite_and_texture("tile_2.png");
+    sp->setPosition(tile.first*64, tile.second*64);
+    m_renderer_ref->gr_add_sprite_to_rendering(sp,0);
+    m_highlighted_tile = sp;
+}
+
+void GameUiController::un_highlight_tile()
+{
+    m_renderer_ref->gr_remove_sprite_from_rendering(m_highlighted_tile,0);
+}
 
 void GameUiController::update_mouse_coordinates()
 {
@@ -69,6 +80,23 @@ std::pair<int, int> GameUiController::coords_to_row_col(sf::Vector2f coords)
         return std::make_pair(row, col);
     
     return std::make_pair(-1, -1);
+}
+
+void GameUiController::check_game_over()
+{  
+    //Check if game should be ended
+    if(m_gameplay_controller_ref->gc_is_game_done() != 0)
+    {
+        int result = m_gameplay_controller_ref->gc_is_game_done();
+        if(result == 1)
+        {
+            std::cerr<<"White won"<<std::endl;
+        }
+        else
+        {
+            std::cerr<<"Black won"<<std::endl;
+        }
+    }
 }
 
 void GameUiController::resolve_frame_events()
@@ -117,28 +145,64 @@ void GameUiController::resolve_frame_events()
             std::pair<int, int> rowcol = coords_to_row_col(m_window->mapPixelToCoords(m_mouse_coords));
             std::cerr<<"Trying to move from "<<m_origin_tile.first<<","<<m_origin_tile.second<<" to "
                                 <<rowcol.first<<","<<rowcol.second<<std::endl;
+
             if(rowcol.first > 0) //check if legal move TODO 
             {
-                bool successfull_move = m_gameplay_controller_ref->gc_make_move(m_origin_tile, rowcol);
+                bool successfull_move;
+
+                if(m_has_to_attack)
+                    successfull_move = m_gameplay_controller_ref->gc_make_mandatory_attack_move(m_origin_tile, rowcol, m_has_to_attack_tile);
+                else
+                    successfull_move = m_gameplay_controller_ref->gc_make_move(m_origin_tile, rowcol);
+
 
                 if(successfull_move)
                 {
                     
                     std::cerr<<"Dropped piece at "<<rowcol.first<<","<<rowcol.second<<std::endl;
                     m_grabbed_piece->pi_get_sprite()->setPosition(rowcol.first*64, rowcol.second*64);
-
+                    bool killed_any = false;
                     if( m_gameplay_controller_ref->gc_get_dead_piece_pointer() != nullptr)
                     {
                         std::cerr<<"YYY"<<std::endl;
+                        killed_any = true;
                         m_renderer_ref->gr_remove_sprite_from_rendering(
                             m_gameplay_controller_ref->
                             gc_get_dead_piece_pointer()->
-                            pi_get_sprite()
+                            pi_get_sprite(), 
+                            1
                             );       
                         m_gameplay_controller_ref->gc_reset_dead_piece_pointer(); 
-                        
+                        un_highlight_tile();
+                        check_game_over();
                     }
-                    m_whose_turn*=-1;
+
+                    if(killed_any)
+                    {
+                        //Check if has to attack further
+                        m_has_to_attack_tile = m_gameplay_controller_ref->gc_check_if_has_to_attack(m_whose_turn);
+                        m_has_to_attack = (m_has_to_attack_tile.first == -1) ? false : true;
+                    }
+
+                    if(!m_has_to_attack)
+                    {
+                        m_whose_turn*=-1;
+                    }
+
+                    //Check if round player has to attack in his turn
+                    m_has_to_attack_tile = m_gameplay_controller_ref->gc_check_if_has_to_attack(m_whose_turn);
+                    m_has_to_attack = (m_has_to_attack_tile.first == -1) ? false : true;
+
+                    if(m_has_to_attack)
+                    {
+                        //Do something so he have to attack
+                        //If next player is obliged to attack, allow only this move and highlight tile
+                        if(m_has_to_attack)
+                        {
+                            std::cerr<<"Has to attack tile: "<<m_has_to_attack_tile.first<<" "<<m_has_to_attack_tile.second<<std::endl;
+                            highlight_tile(m_has_to_attack_tile);
+                        }
+                    }
                 }
                 else 
                 {

@@ -57,6 +57,9 @@ class GameplayController
         AbstractPiece* gc_try_to_get_piece_at_coords(sf::Vector2f coords); 
         AbstractPiece* gc_get_dead_piece_pointer();
         void gc_reset_dead_piece_pointer();
-
+        std::pair<int, int> gc_check_if_has_to_attack(int player_turn_flag);
+        bool gc_make_mandatory_attack_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile, std::pair<int, int> attack_tile);
+        //Return 0 if not, 1 if white won, 2 if black won
+        int gc_is_game_done();
         GameplayController();
 };

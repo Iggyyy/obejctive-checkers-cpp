@@ -40,14 +40,14 @@ void GraphicsRenderer::gr_add_sprite_to_rendering(sf::Sprite* sprite, int priori
     m_sprite_map[priority].push_back(sprite);
 }
 
-bool GraphicsRenderer::gr_remove_sprite_from_rendering(sf::Sprite* sprite)
+bool GraphicsRenderer::gr_remove_sprite_from_rendering(sf::Sprite* sprite, int layer)
 {
     std::cerr<<"Endte"<<std::endl;
-    for(int i =0 ; i < m_sprite_map[1].size(); i++)
+    for(int i =0 ; i < m_sprite_map[layer].size(); i++)
     {
-        if(m_sprite_map[1][i] == sprite)
+        if(m_sprite_map[layer][i] == sprite)
             {
-                m_sprite_map[1].erase(m_sprite_map[1].begin() + i);
+                m_sprite_map[layer].erase(m_sprite_map[layer].begin() + i);
                 std::cerr<<"Erased sprite from rendering"<<std::endl;
                 return true;
             }

@@ -11,7 +11,7 @@ class GraphicsRenderer
     public:
         //Add sprite to rendering. Priority is layer, the higher the more on top
         void gr_add_sprite_to_rendering(sf::Sprite* sprite, int priority);
-        bool gr_remove_sprite_from_rendering(sf::Sprite*);
+        bool gr_remove_sprite_from_rendering(sf::Sprite*, int layer);
 
         //Render frane with current state of the window
         void gr_render_whole_scene(sf::RenderWindow* window);
