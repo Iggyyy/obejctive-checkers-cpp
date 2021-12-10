@@ -21,7 +21,7 @@ class GameplayController
         }
         AbstractPiece* get_reference_to_piece_at_board(int row, int col)
         {
-            std::cerr<<"Getting ref at row"<<col<<" col"<<row<<""<<std::endl;
+            //std::cerr<<"Getting ref at row"<<col<<" col"<<row<<""<<std::endl;
            
             return m_board[col][row];
         }

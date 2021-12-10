@@ -2,7 +2,7 @@
 #include    <iostream>
 
 
-sf::Sprite* load_spirite_and_texture(std::string path)
+sf::Sprite* load_spirite_and_texture(std::string path, float scale=0.125f)
 {
     sf::Texture* texture = new sf::Texture();
     sf::Sprite* sprite = new sf::Sprite();
@@ -12,7 +12,7 @@ sf::Sprite* load_spirite_and_texture(std::string path)
         texture->setSmooth(true);
 
         sprite->setTexture(*texture);
-        sprite->setScale(0.125, 0.125); //scale down by 8 times to 64px
+        sprite->setScale(scale, scale); //scale down by 8 times to 64px
         sprite->setPosition(0, 0);
     }
     else
@@ -101,9 +101,12 @@ void GameUiController::check_game_over()
 
 void GameUiController::resolve_frame_events()
 {
+    //printf("S");
     sf::Event event;
     m_window->pollEvent(event);
     update_mouse_coordinates();
+
+    
     
     //Update sprite coordinates if mouse is holding something
     if(m_is_piece_grabbed == true)
@@ -115,6 +118,7 @@ void GameUiController::resolve_frame_events()
     }
 
     if (event.type == sf::Event::Closed) m_window->close();
+    
     if (event.type == sf::Event::MouseButtonPressed)
     {
         std::cerr<<"Mosue clicked at: "<<m_mouse_coords.x << ", "<<m_mouse_coords.y<<std::endl;
@@ -164,14 +168,17 @@ void GameUiController::resolve_frame_events()
                     bool killed_any = false;
                     if( m_gameplay_controller_ref->gc_get_dead_piece_pointer() != nullptr)
                     {
-                        std::cerr<<"YYY"<<std::endl;
+                        std::cerr<<"Piece has been killed"<<std::endl;
                         killed_any = true;
+                        piece_killed_ui_broadcast(m_gameplay_controller_ref->gc_get_dead_piece_pointer()->pi_get_piece_color());
+                        
                         m_renderer_ref->gr_remove_sprite_from_rendering(
                             m_gameplay_controller_ref->
                             gc_get_dead_piece_pointer()->
                             pi_get_sprite(), 
                             1
-                            );       
+                            ); 
+
                         m_gameplay_controller_ref->gc_reset_dead_piece_pointer(); 
                         un_highlight_tile();
                         check_game_over();
@@ -218,4 +225,111 @@ void GameUiController::resolve_frame_events()
 
         }
     }
+
+    
 }
+
+void GameUiController::load_all_ui_background_visuals()
+{
+    //BACKGROUND
+    //--------------------------------------
+    sf::Sprite* sp = load_spirite_and_texture("background.png", 1.f);
+    sp->setPosition(0, 0);
+    m_renderer_ref->gr_add_sprite_to_rendering(sp, 0);
+    //--------------------------------------
+
+    //BUTTONS
+    //--------------------------------------
+    int buttons = 3;
+    std::string button_names[buttons] = {
+        "Reset",
+        "Toggle sound",
+        "Exit"
+    };
+
+    int start_x = 768;
+    int start_y = 0;
+    int break_between_buttons = 32;
+    for (int i =0 ; i< buttons; i++)
+    {
+        sf::Sprite* sp = load_spirite_and_texture("button.png", 0.5f);
+        sp->setPosition(start_x, start_y + 64*i + break_between_buttons);
+        m_renderer_ref->gr_add_sprite_to_rendering(sp, 1);
+        m_ui_buttons.push_back(std::make_pair(button_names[i], sp));
+    }
+    //--------------------------------------
+
+    //FONT
+    //--------------------------------------
+    m_font.loadFromFile("./source/Raleway-Medium.ttf");
+    //--------------------------------------
+
+
+    int white_counter_y = 512;
+    int black_counter_y = 576;
+    //TEXT COUNTERS 
+    //--------------------------------------
+    sf::Text dead_white_pieces_cnt;
+    dead_white_pieces_cnt.setPosition(start_x + 64, white_counter_y + 8);
+    dead_white_pieces_cnt.setCharacterSize(32);
+    dead_white_pieces_cnt.setFont(m_font);
+	dead_white_pieces_cnt.setFillColor(sf::Color::Black);
+    dead_white_pieces_cnt.setString("0");
+
+    m_ui_texts.push_back( std::make_pair("dead_white", dead_white_pieces_cnt) );
+    m_renderer_ref->gr_add_text_to_rendering(dead_white_pieces_cnt, 1);
+
+
+    sf::Text dead_black_pieces_cnt = dead_white_pieces_cnt;
+    dead_black_pieces_cnt.setPosition(start_x + 64, black_counter_y + 8);
+
+    m_ui_texts.push_back( std::make_pair("dead_black", dead_black_pieces_cnt) );
+    m_renderer_ref->gr_add_text_to_rendering(dead_black_pieces_cnt, 1);
+    //--------------------------------------
+
+    //GRAPHIC PIECE FOR COUNTERS 
+    //--------------------------------------
+    sf::Sprite* white_pc = load_spirite_and_texture("white_piece.png");
+    white_pc->setPosition(start_x, white_counter_y);
+    m_renderer_ref->gr_add_sprite_to_rendering(white_pc, 1);
+
+   
+    sf::Sprite* black_pc = load_spirite_and_texture("black_piece.png");
+    black_pc->setPosition(start_x, black_counter_y);
+    m_renderer_ref->gr_add_sprite_to_rendering(black_pc, 1);
+
+ 
+    //--------------------------------------
+    
+
+}
+
+void GameUiController::piece_killed_ui_broadcast(PieceColor pclr)
+{
+    std::string color_string;
+    if(pclr == PieceColor::white)
+        color_string = "white";
+    else if (pclr == PieceColor::black)
+        color_string = "black";
+
+    update_kill_counter(color_string);
+}
+void GameUiController::update_kill_counter(std::string color_string)
+{
+    std::string full_text_string = "dead_" + color_string;
+    for(int i =0; i < m_ui_texts.size(); i++)
+    {
+        if ( m_ui_texts[i].first == full_text_string)
+        {
+            std::string s = m_ui_texts[i].second.getString();
+            int current = atoi(s.c_str());
+
+            m_ui_texts[i].second.setString(std::to_string(++current));
+            std::cerr<<"Counter "<<full_text_string<< " updated to "<<current<<std::endl;
+        }
+    }
+}
+
+
+
+

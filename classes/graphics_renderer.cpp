@@ -5,11 +5,6 @@
 
 void GraphicsRenderer::gr_render_whole_scene(sf::RenderWindow* window)
 {
-
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-   
     sf::Event event;
     while (window->pollEvent(event))
     {
@@ -29,6 +24,15 @@ void GraphicsRenderer::gr_render_whole_scene(sf::RenderWindow* window)
         }
     }
 
+    //Render all texts on consecutive layers
+    for(auto record : m_text_map)
+    {
+        for(auto txt : record.second)
+        {
+            window->draw(txt);
+        }
+    }
+
 
     window->display();
 
@@ -38,6 +42,13 @@ void GraphicsRenderer::gr_render_whole_scene(sf::RenderWindow* window)
 void GraphicsRenderer::gr_add_sprite_to_rendering(sf::Sprite* sprite, int priority)
 {
     m_sprite_map[priority].push_back(sprite);
+    std::cerr<<"Added new sprite to rendering on layer: "<<priority<<std::endl;
+}
+
+void GraphicsRenderer::gr_add_text_to_rendering(sf::Text text, int priority)
+{
+    m_text_map[priority].push_back(text);
+    std::cerr<<"Added new text to rendering on layer: "<<priority<<std::endl;
 }
 
 bool GraphicsRenderer::gr_remove_sprite_from_rendering(sf::Sprite* sprite, int layer)
