@@ -14,45 +14,18 @@
 //GameplayController
 // implement game logic under make_move 
 
-//Pieces
-// implement black piece
-
 // GameUiController
-// implement moving
-// implement tile calculations
 // implement rounds 
 // implement UI events
 // implement buttons
 // wire up with GraphicsRenderer
-
+void print_board(GameplayController* gameplayController, GraphicsRenderer* graphicsRenderer);
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1024, 640), "Checkers");
-    
-
     GraphicsRenderer graphicsRenderer;
     GameplayController gameplayController;
     GameUiController gameUiController(&graphicsRenderer, &gameplayController, &window);
-
-
-
-    std::cout<<"BOARD"<<std::endl;
-    auto b = gameplayController.gc_get_board();
-    
-    for (int i = 0; i<b.size(); i++)
-    {
-        std::cout<<i<<": ";
-        for (int j = 0; j<b[0].size(); j++)
-        {
-            std::cout<<b[i][j]->pi_get_piece_color()<<" ";
-            b[i][j]->set_sprite_position(i*64, j*64);
-            if (b[i][j]->pi_get_piece_color() != PieceColor::dummy)
-                graphicsRenderer.gr_add_sprite_to_rendering(b[i][j]->pi_get_sprite(), 1);
-        }
-        std::cout<<std::endl;
-    }   
-    std::cout<<"BOARD END"<<std::endl;
-
 
     float frames_target = 60.f;
     int frames_passed;
@@ -71,3 +44,4 @@ int main()
 
     return 0;
 }
+

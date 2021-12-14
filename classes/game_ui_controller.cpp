@@ -23,6 +23,40 @@ sf::Sprite* load_spirite_and_texture(std::string path, float scale=0.125f)
     return sprite;
 }
 
+sf::Text* GameUiController::create_text(std::string name, std::string content, int pos_x, int pos_y, int character_size)
+{
+    sf::Text* text = new sf::Text();
+    text->setPosition(pos_x, pos_y);
+    text->setCharacterSize(character_size); 
+    text->setFont(m_font);
+	text->setFillColor(sf::Color::Black);
+    text->setString(content);
+
+    m_ui_texts.push_back( std::make_pair(name, text) );
+    return text;
+}
+
+void GameUiController::load_pieces()
+{
+    
+    std::cout<<"BOARD"<<std::endl;
+    auto b = m_gameplay_controller_ref->gc_get_board();
+    
+    for (int i = 0; i<b.size(); i++)
+    {
+        std::cout<<i<<": ";
+        for (int j = 0; j<b[0].size(); j++)
+        {
+            std::cout<<b[i][j]->pi_get_piece_color()<<" ";
+            b[i][j]->set_sprite_position(i*64, j*64);
+            if (b[i][j]->pi_get_piece_color() != PieceColor::dummy)
+                m_renderer_ref->gr_add_sprite_to_rendering(b[i][j]->pi_get_sprite(), 1);
+        }
+        std::cout<<std::endl;
+    }   
+    std::cout<<"BOARD END"<<std::endl;
+}
+
 void GameUiController::load_board_tiles_and_add_to_render()
 {
     for(int i =0; i<10; i++)
@@ -253,7 +287,7 @@ void GameUiController::load_all_ui_background_visuals()
     for (int i =0 ; i< buttons; i++)
     {
         sf::Sprite* sp = load_spirite_and_texture("button.png", 0.5f);
-        sp->setPosition(start_x, start_y + 64*i + break_between_buttons);
+        sp->setPosition(start_x, start_y + 64*i);
         m_renderer_ref->gr_add_sprite_to_rendering(sp, 1);
         m_ui_buttons.push_back(std::make_pair(button_names[i], sp));
     }
@@ -269,23 +303,22 @@ void GameUiController::load_all_ui_background_visuals()
     int black_counter_y = 576;
     //TEXT COUNTERS 
     //--------------------------------------
-    sf::Text dead_white_pieces_cnt;
-    dead_white_pieces_cnt.setPosition(start_x + 64, white_counter_y + 8);
-    dead_white_pieces_cnt.setCharacterSize(32);
-    dead_white_pieces_cnt.setFont(m_font);
-	dead_white_pieces_cnt.setFillColor(sf::Color::Black);
-    dead_white_pieces_cnt.setString("0");
-
-    m_ui_texts.push_back( std::make_pair("dead_white", dead_white_pieces_cnt) );
+    sf::Text* dead_white_pieces_cnt = create_text("dead_white", "0", start_x + 64, white_counter_y + 8, 32);
     m_renderer_ref->gr_add_text_to_rendering(dead_white_pieces_cnt, 1);
 
-
-    sf::Text dead_black_pieces_cnt = dead_white_pieces_cnt;
-    dead_black_pieces_cnt.setPosition(start_x + 64, black_counter_y + 8);
-
-    m_ui_texts.push_back( std::make_pair("dead_black", dead_black_pieces_cnt) );
+    sf::Text* dead_black_pieces_cnt = create_text("dead_black", "0", start_x + 64, black_counter_y + 8, 32);
     m_renderer_ref->gr_add_text_to_rendering(dead_black_pieces_cnt, 1);
+
+    sf::Text* dead_pieces_text = create_text("dead_pieces", "Dead pieces:", start_x + 8, white_counter_y - 32, 32);
+    m_renderer_ref->gr_add_text_to_rendering(dead_pieces_text, 1);
+
+    sf::Text* turn_header_text = create_text("turn_header_text", "Current player: ", start_x + 8, white_counter_y - 128, 32);
+    m_renderer_ref->gr_add_text_to_rendering(turn_header_text, 1);
+
+    sf::Text* turn_text = create_text("turn_text", "black", start_x + 8, white_counter_y - 96, 32);
+    m_renderer_ref->gr_add_text_to_rendering(turn_text, 1);
     //--------------------------------------
+
 
     //GRAPHIC PIECE FOR COUNTERS 
     //--------------------------------------
@@ -314,6 +347,7 @@ void GameUiController::piece_killed_ui_broadcast(PieceColor pclr)
 
     update_kill_counter(color_string);
 }
+
 void GameUiController::update_kill_counter(std::string color_string)
 {
     std::string full_text_string = "dead_" + color_string;
@@ -321,10 +355,10 @@ void GameUiController::update_kill_counter(std::string color_string)
     {
         if ( m_ui_texts[i].first == full_text_string)
         {
-            std::string s = m_ui_texts[i].second.getString();
+            std::string s = m_ui_texts[i].second->getString();
             int current = atoi(s.c_str());
 
-            m_ui_texts[i].second.setString(std::to_string(++current));
+            m_ui_texts[i].second->setString(std::to_string(++current));
             std::cerr<<"Counter "<<full_text_string<< " updated to "<<current<<std::endl;
         }
     }

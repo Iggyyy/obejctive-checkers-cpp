@@ -8,14 +8,14 @@ class GraphicsRenderer
 {
     private:
         std::map<int, std::vector<sf::Sprite*>> m_sprite_map;
-        std::map<int, std::vector<sf::Text>> m_text_map;
+        std::map<int, std::vector<sf::Text*>> m_text_map;
     public:
         //Add sprite to rendering. Priority is layer, the higher the more on top
         void gr_add_sprite_to_rendering(sf::Sprite* sprite, int priority);
         bool gr_remove_sprite_from_rendering(sf::Sprite*, int layer);
 
         //Add text to rendering
-        void gr_add_text_to_rendering(sf::Text text, int priority);
+        void gr_add_text_to_rendering(sf::Text* text, int priority);
 
         //Render frane with current state of the window
         void gr_render_whole_scene(sf::RenderWindow* window);

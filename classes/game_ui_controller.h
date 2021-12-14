@@ -22,11 +22,12 @@ class GameUiController
         std::pair<int, int> m_has_to_attack_tile;
         sf::Sprite* m_highlighted_tile;
         //Vector of buttons with string etiquette and sprite
-        std::vector< std::pair<std::string,sf::Sprite*> > m_ui_buttons;
-        std::vector< std::pair<std::string,sf::Text> > m_ui_texts;
+        std::vector< std::pair<std::string,sf::Sprite* > > m_ui_buttons;
+        std::vector< std::pair<std::string,sf::Text* > > m_ui_texts;
         sf::Font m_font;
     protected:
         void update_mouse_coordinates();
+        sf::Text* create_text(std::string name, std::string content, int pos_x, int pos_y, int character_size);
         //Convert coords to row and col on board
         std::pair<int, int> coords_to_row_col(sf::Vector2f);
         void highlight_tile(std::pair<int, int> tile);
@@ -39,6 +40,7 @@ class GameUiController
     public:
         void load_board_tiles_and_add_to_render();
         void load_all_ui_background_visuals();
+        void load_pieces();
         void resolve_frame_events();
         GameUiController(GraphicsRenderer* renderer_ref, 
                             GameplayController *gameplay_controller_ref,
@@ -48,8 +50,10 @@ class GameUiController
             m_renderer_ref = renderer_ref;
             m_window = window;
             m_is_piece_grabbed = false;
+            load_pieces();
             load_all_ui_background_visuals();
             load_board_tiles_and_add_to_render(); 
+
         }
 
 };

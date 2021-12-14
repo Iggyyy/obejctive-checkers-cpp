@@ -29,7 +29,7 @@ void GraphicsRenderer::gr_render_whole_scene(sf::RenderWindow* window)
     {
         for(auto txt : record.second)
         {
-            window->draw(txt);
+            window->draw(*txt);
         }
     }
 
@@ -45,8 +45,11 @@ void GraphicsRenderer::gr_add_sprite_to_rendering(sf::Sprite* sprite, int priori
     std::cerr<<"Added new sprite to rendering on layer: "<<priority<<std::endl;
 }
 
-void GraphicsRenderer::gr_add_text_to_rendering(sf::Text text, int priority)
+void GraphicsRenderer::gr_add_text_to_rendering(sf::Text* text, int priority)
 {
+    
+    std::cerr<<"Adress from renderer "<<text<<std::endl;
+    
     m_text_map[priority].push_back(text);
     std::cerr<<"Added new text to rendering on layer: "<<priority<<std::endl;
 }
