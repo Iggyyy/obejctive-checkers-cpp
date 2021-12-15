@@ -14,6 +14,8 @@ class GameplayController
         std::vector< std::vector<AbstractPiece*> > m_board;
         int m_eliminated_white_pieces = 0, m_eliminated_black_pieces = 0;
         AbstractPiece* m_ref_to_dead_piece = nullptr;
+
+        
         void set_reference_at_board(AbstractPiece* new_reference, int row, int col)
         {
             std::cerr<<"setting ref to "<<new_reference->pi_get_piece_color()<<" at: (row, col) "<<row<<" "<<col<<std::endl;

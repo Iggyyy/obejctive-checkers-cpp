@@ -29,10 +29,11 @@ class GameUiController
 
         //AUDIO
         //Sound volume 0-100
-        // int m_sound_volume = 50;
-        // sf::Sound *m_audio;
-        // sf::SoundBuffer *m_btn_sound;
-        // sf::SoundBuffer *m_piece_sound;
+        float m_sound_volume = 50.f;
+        sf::Sound m_sound_btn;
+        sf::Sound m_sound_piece;
+        sf::SoundBuffer m_btn_soundbfr;
+        sf::SoundBuffer m_piece_soundbfr;
     protected:
         void update_mouse_coordinates();
         sf::Text* create_text(std::string name, std::string content, int pos_x, int pos_y, int character_size);

@@ -11,14 +11,11 @@
 // g++ -c main.cpp 
 // g++ main.o -o main -lsfml-graphics -lsfml-window -lsfml-system
 
-//GameplayController
-// implement game logic under make_move 
+//TODO
+// queen
+// multiple choices
 
-// GameUiController
-// implement rounds 
-// implement UI events
-// implement buttons
-// wire up with GraphicsRenderer
+// audio
 
 int main()
 {

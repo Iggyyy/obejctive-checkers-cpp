@@ -168,7 +168,7 @@ void GameUiController::resolve_frame_events()
                 if(btn.first == "Exit")
                     exit_game();
 
-                //play_sound("button");
+                play_sound("button");
                 std::cerr<<"BUTTON CLICKED: "<<btn.first<<std::endl;
             }
         //----------------------------------------
@@ -193,7 +193,7 @@ void GameUiController::resolve_frame_events()
                 }
             }
             
-           // play_sound("piece");
+            
         }
         else
         {
@@ -435,33 +435,46 @@ void GameUiController::toggle_sound()
     std::cerr<<"Toggle sound"<<std::endl;
 
     //TOOD
+    if(m_sound_btn.getVolume() < 5) //Muted
+    {
+        std::cerr<<"Sound on"<<std::endl;
+        m_sound_btn.setVolume(m_sound_volume);
+        m_sound_piece.setVolume(m_sound_volume);
+    }
+    else
+    {
+        std::cerr<<"Sound off"<<std::endl;
+        m_sound_btn.setVolume(0);
+        m_sound_piece.setVolume(0);
+    }
 }
 
-// void GameUiController::load_audio()
-// {
-//     std::cerr<<"Loading audio"<<std::endl;
+void GameUiController::load_audio()
+{
+    std::cerr<<"Loading audio"<<std::endl;
+   
+    m_btn_soundbfr.loadFromFile("./source/btn.flac");
+    m_piece_soundbfr.loadFromFile("./source/piece.flac");
+    std::cerr<<"buffers loaded"<<std::endl;
 
-//     m_audio = new sf::Sound();
-//     m_btn_sound = new sf::SoundBuffer();
-//     m_piece_sound = new sf::SoundBuffer();
 
-//     m_audio->setVolume(m_sound_volume);
-//     m_btn_sound->loadFromFile("./source/btn.flac");
-//     m_piece_sound->loadFromFile("./source/piece.flac");
-//     std::cerr<<"Audio loaded"<<std::endl;
-// }
+    m_sound_btn.setBuffer(m_btn_soundbfr);
+    m_sound_piece.setBuffer(m_piece_soundbfr);
+    std::cerr<<"Audio loaded"<<std::endl;
 
-// void GameUiController::play_sound(std::string sound_name)
-// {
-//     // std::cerr<<"Playing sound"<<std::endl;
-    
-//     // if(sound_name == "button")
-//     // {
-//     //     m_audio->setBuffer(*m_btn_sound);
-//     // }
-//     // else
-//     // {
-//     //     m_audio->setBuffer(*m_piece_sound);
-//     // }
-//     //     m_audio->play();
-// }
+}
+
+void GameUiController::play_sound(std::string sound_name)
+{
+    std::cerr<<"Playing sound"<<std::endl;
+    if(sound_name == "button")
+    {
+        m_sound_btn.play();
+    }
+    else
+    {
+        m_sound_piece.play();
+    }
+    std::cerr<<"Sound been played"<<std::endl;
+}
+
