@@ -19,7 +19,7 @@
 // implement UI events
 // implement buttons
 // wire up with GraphicsRenderer
-void print_board(GameplayController* gameplayController, GraphicsRenderer* graphicsRenderer);
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(1024, 640), "Checkers");
@@ -32,15 +32,13 @@ int main()
 
     while (window.isOpen())
     {
-        printf("");
+        //printf("");
         gameUiController.resolve_frame_events();
         graphicsRenderer.gr_render_whole_scene(&window); 
-        printf("");
+        //printf("");
         
         frames_passed > frames_target ? frames_passed = 0 : frames_passed++;
     }
-
-   
 
     return 0;
 }

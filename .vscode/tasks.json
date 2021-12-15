@@ -14,7 +14,8 @@
 				"${fileDirname}\\${fileBasenameNoExtension}.exe",
 				"-lsfml-graphics-d",
 				"-lsfml-window-d",
-				"-lsfml-system-d"
+				"-lsfml-system-d",
+				"-lsfml-audio-d"
 			],
 			"options": {
 				"cwd": "C:/mingw730/mingw32/bin"

@@ -3,6 +3,7 @@
 #include "abstract_piece.h"
 #include "pieces.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "graphics_renderer.h"
 #include "gameplay_controller.h"
 
@@ -25,6 +26,13 @@ class GameUiController
         std::vector< std::pair<std::string,sf::Sprite* > > m_ui_buttons;
         std::vector< std::pair<std::string,sf::Text* > > m_ui_texts;
         sf::Font m_font;
+
+        //AUDIO
+        //Sound volume 0-100
+        // int m_sound_volume = 50;
+        // sf::Sound *m_audio;
+        // sf::SoundBuffer *m_btn_sound;
+        // sf::SoundBuffer *m_piece_sound;
     protected:
         void update_mouse_coordinates();
         sf::Text* create_text(std::string name, std::string content, int pos_x, int pos_y, int character_size);
@@ -37,6 +45,12 @@ class GameUiController
         void piece_killed_ui_broadcast(PieceColor pclr);
         //Counter update
         void update_kill_counter(std::string color_string);
+        //BUTTONS
+        void exit_game();
+        void reset_game();
+        void toggle_sound();
+        void load_audio();
+        void play_sound(std::string sound_name);
     public:
         void load_board_tiles_and_add_to_render();
         void load_all_ui_background_visuals();
@@ -52,7 +66,8 @@ class GameUiController
             m_is_piece_grabbed = false;
             load_pieces();
             load_all_ui_background_visuals();
-            load_board_tiles_and_add_to_render(); 
+            load_board_tiles_and_add_to_render();
+            //load_audio(); 
 
         }
 

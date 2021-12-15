@@ -1,6 +1,5 @@
 #include "game_ui_controller.h"
-#include    <iostream>
-
+#include <iostream>
 
 sf::Sprite* load_spirite_and_texture(std::string path, float scale=0.125f)
 {
@@ -156,9 +155,26 @@ void GameUiController::resolve_frame_events()
     if (event.type == sf::Event::MouseButtonPressed)
     {
         std::cerr<<"Mosue clicked at: "<<m_mouse_coords.x << ", "<<m_mouse_coords.y<<std::endl;
+
         //HANDLE BUTTONS
+        //----------------------------------------
+        for(auto btn : m_ui_buttons)
+            if (btn.second->getGlobalBounds().contains(m_window->mapPixelToCoords(m_mouse_coords)))
+            {
+                if(btn.first == "Reset")
+                    reset_game();
+                if(btn.first == "Toggle sound")
+                    toggle_sound();
+                if(btn.first == "Exit")
+                    exit_game();
+
+                //play_sound("button");
+                std::cerr<<"BUTTON CLICKED: "<<btn.first<<std::endl;
+            }
+        //----------------------------------------
 
         //TRY TO GRAB
+        //----------------------------------------
         if (m_is_piece_grabbed == false)
         {
             auto grabbed_piece = m_gameplay_controller_ref->gc_try_to_get_piece_at_coords(m_window->mapPixelToCoords(m_mouse_coords));
@@ -176,6 +192,8 @@ void GameUiController::resolve_frame_events()
                     std::cerr<<"Tried to grab wrong player's piece"<<std::endl;
                 }
             }
+            
+           // play_sound("piece");
         }
         else
         {
@@ -256,8 +274,10 @@ void GameUiController::resolve_frame_events()
                 m_origin_tile = std::make_pair(0,0);
                 
             }
+            //play_sound("piece");
 
         }
+        //----------------------------------------
     }
 
     
@@ -290,6 +310,10 @@ void GameUiController::load_all_ui_background_visuals()
         sp->setPosition(start_x, start_y + 64*i);
         m_renderer_ref->gr_add_sprite_to_rendering(sp, 1);
         m_ui_buttons.push_back(std::make_pair(button_names[i], sp));
+
+        //BUTTON TEXTS
+        sf::Text* reset_text = create_text(button_names[i], button_names[i], start_x + 32, start_y + 10 + 64*i, 32);
+        m_renderer_ref->gr_add_text_to_rendering(reset_text, 1);
     }
     //--------------------------------------
 
@@ -364,6 +388,80 @@ void GameUiController::update_kill_counter(std::string color_string)
     }
 }
 
+void GameUiController::exit_game()
+{
+    std::cerr<<"Closing game"<<std::endl;
+    m_window->close();
+    exit(0);
+}
 
+void GameUiController::reset_game()
+{
+    std::cerr<<"Reset game!"<<std::endl;
 
+    //Remove and reload all pieces
+    auto b = m_gameplay_controller_ref->gc_get_board();
+    for (int i = 0; i<b.size(); i++)
+        for (int j = 0; j<b[0].size(); j++)
+            if (b[i][j]->pi_get_piece_color() != PieceColor::dummy)
+                {
+                    bool removed = m_renderer_ref->gr_remove_sprite_from_rendering(b[i][j]->pi_get_sprite(), 1);
+                    std::cerr<<removed<<" "<<std::endl;
+                }
 
+    m_gameplay_controller_ref->gc_reset_game();
+    m_renderer_ref->gr_remove_sprite_from_rendering(m_highlighted_tile, 0);
+    load_pieces();
+
+    //Reset properties
+    m_whose_turn = 1;
+    m_has_to_attack = false;
+    m_has_to_attack_tile = std::make_pair(-1, -1);
+
+    for( auto i : m_ui_texts)
+        {
+            if(i.first == "dead_black" || i.first == "dead_white")
+                i.second->setString("0");
+            if(i.first == "turn_text")
+                i.second->setString("black");
+        }
+
+    std::cerr<<"Game has been reseted!"<<std::endl;
+    
+}
+
+void GameUiController::toggle_sound()
+{
+    std::cerr<<"Toggle sound"<<std::endl;
+
+    //TOOD
+}
+
+// void GameUiController::load_audio()
+// {
+//     std::cerr<<"Loading audio"<<std::endl;
+
+//     m_audio = new sf::Sound();
+//     m_btn_sound = new sf::SoundBuffer();
+//     m_piece_sound = new sf::SoundBuffer();
+
+//     m_audio->setVolume(m_sound_volume);
+//     m_btn_sound->loadFromFile("./source/btn.flac");
+//     m_piece_sound->loadFromFile("./source/piece.flac");
+//     std::cerr<<"Audio loaded"<<std::endl;
+// }
+
+// void GameUiController::play_sound(std::string sound_name)
+// {
+//     // std::cerr<<"Playing sound"<<std::endl;
+    
+//     // if(sound_name == "button")
+//     // {
+//     //     m_audio->setBuffer(*m_btn_sound);
+//     // }
+//     // else
+//     // {
+//     //     m_audio->setBuffer(*m_piece_sound);
+//     // }
+//     //     m_audio->play();
+// }
