@@ -5,8 +5,6 @@
 #include "pieces.h"
 
 
-
-
 class GameplayController
 {
     private:
@@ -14,8 +12,6 @@ class GameplayController
         std::vector< std::vector<AbstractPiece*> > m_board;
         int m_eliminated_white_pieces = 0, m_eliminated_black_pieces = 0;
         AbstractPiece* m_ref_to_dead_piece = nullptr;
-
-        
         void set_reference_at_board(AbstractPiece* new_reference, int row, int col)
         {
             std::cerr<<"setting ref to "<<new_reference->pi_get_piece_color()<<" at: (row, col) "<<row<<" "<<col<<std::endl;
@@ -39,8 +35,6 @@ class GameplayController
             std::cerr<<"Tile "<<tile.second<<" "<<tile.first<<" is taken"<<std::endl;
             return true;
         }
-
-
     protected:
         //clear all references from board
         void gc_clear_board();

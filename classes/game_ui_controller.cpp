@@ -37,7 +37,6 @@ sf::Text* GameUiController::create_text(std::string name, std::string content, i
 
 void GameUiController::load_pieces()
 {
-    
     std::cout<<"BOARD"<<std::endl;
     auto b = m_gameplay_controller_ref->gc_get_board();
     b[3][0]->change_to_queen();
@@ -135,12 +134,9 @@ void GameUiController::check_game_over()
 
 void GameUiController::resolve_frame_events()
 {
-    //printf("S");
     sf::Event event;
     m_window->pollEvent(event);
     update_mouse_coordinates();
-
-    
     
     //Update sprite coordinates if mouse is holding something
     if(m_is_piece_grabbed == true)
@@ -193,8 +189,6 @@ void GameUiController::resolve_frame_events()
                     std::cerr<<"Tried to grab wrong player's piece"<<std::endl;
                 }
             }
-            
-            
         }
         else
         {
@@ -283,9 +277,7 @@ void GameUiController::resolve_frame_events()
 
         }
         //----------------------------------------
-    }
-
-    
+    } 
 }
 
 void GameUiController::load_all_ui_background_visuals()
@@ -431,16 +423,13 @@ void GameUiController::reset_game()
             if(i.first == "turn_text")
                     i.second->setString("Black");
         }
-
     std::cerr<<"Game has been reseted!"<<std::endl;
-    
 }
 
 void GameUiController::toggle_sound()
 {
     std::cerr<<"Toggle sound"<<std::endl;
 
-    //TOOD
     if(m_sound_btn.getVolume() < 5) //Muted
     {
         std::cerr<<"Sound on"<<std::endl;
@@ -462,7 +451,6 @@ void GameUiController::load_audio()
     m_btn_soundbfr.loadFromFile("./source/btn.flac");
     m_piece_soundbfr.loadFromFile("./source/piece.flac");
     std::cerr<<"buffers loaded"<<std::endl;
-
 
     m_sound_btn.setBuffer(m_btn_soundbfr);
     m_sound_piece.setBuffer(m_piece_soundbfr);

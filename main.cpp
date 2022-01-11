@@ -23,14 +23,11 @@ int main()
 
     while (window.isOpen())
     {
-        //printf("");
         gameUiController.resolve_frame_events();
         graphicsRenderer.gr_render_whole_scene(&window); 
-        //printf("");
         
         frames_passed > frames_target ? frames_passed = 0 : frames_passed++;
     }
-
     return 0;
 }
 

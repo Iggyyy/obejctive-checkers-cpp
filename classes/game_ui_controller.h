@@ -72,6 +72,5 @@ class GameUiController
             //load_audio(); 
 
         }
-
 };
 

@@ -75,7 +75,6 @@ void AbstractPiece::change_to_queen()
     isQueen = true;
     std::string filename = m_piece_color == PieceColor::black ? "black_piece_queen.png" : "white_piece_queen.png";
 
-
     sf::Texture* texture = new sf::Texture();
     if ( texture->loadFromFile("./source/" + filename)  )
     {

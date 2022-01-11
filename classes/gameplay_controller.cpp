@@ -60,7 +60,6 @@ void GameplayController::gc_load_start_setup()
             else
                 set_reference_at_board(new PieceDummy(), i, col);
         }
-    
 }
 
 void GameplayController::gc_reset_game()
@@ -117,7 +116,6 @@ bool GameplayController::check_move_legal(std::pair<int, int> from_tile, std::pa
     }
 
     return true;
-
 }
 
 void GameplayController::print_board()
@@ -194,7 +192,6 @@ bool GameplayController::move_queen(std::pair<int, int> from_tile, std::pair<int
     }
 
     return true;
-
 }
 
 bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile)
@@ -210,7 +207,6 @@ bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<i
         bool moved = move_queen(from_tile, to_tile);
         return moved;
     }
-
 
     bool is_attacking = false;
     int attack_row, attack_col; 
@@ -234,7 +230,6 @@ bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<i
     bool legal = check_move_legal(from_tile, to_tile, is_attacking, move_direction);
     if (legal == false)
         return false;
-
     
     //If legal then do the move
     set_reference_at_board(new PieceDummy(), from_tile.second, from_tile.first);
@@ -259,8 +254,6 @@ void GameplayController::check_make_queen(AbstractPiece* moving_piece, std::pair
     {
         moving_piece->change_to_queen();
     }   
-
-
 }
 
 bool GameplayController::gc_make_mandatory_attack_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile, std::pair<int, int> attack_tile)
@@ -300,8 +293,6 @@ AbstractPiece* GameplayController::gc_try_to_get_piece_at_coords(sf::Vector2f co
             auto sp = p->pi_get_sprite();
             bool overlaps = sp->getGlobalBounds().contains(coords);
 
-            //std::cerr<<"Mouse at: "<< coords.x<<","<<coords.y<<std::endl;
-            //std::cerr<<"sprite at: "<< sp->getGlobalBounds().top<<std::endl;
             if (overlaps)
                 return p;
         }
@@ -311,8 +302,6 @@ AbstractPiece* GameplayController::gc_try_to_get_piece_at_coords(sf::Vector2f co
 AbstractPiece* GameplayController::gc_get_dead_piece_pointer()
 {
    AbstractPiece* to_return = m_ref_to_dead_piece;
-    //m_ref_to_dead_piece = nullptr;
-    //AbstractPiece* to_return = new PieceDummy();
     return to_return;
 }
 

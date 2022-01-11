@@ -13,8 +13,6 @@ void GraphicsRenderer::gr_render_whole_scene(sf::RenderWindow* window)
     }
 
     window->clear();
-    
-
     //Render all sprites on consecutive layers
     for(auto record : m_sprite_map)
     {
@@ -32,10 +30,7 @@ void GraphicsRenderer::gr_render_whole_scene(sf::RenderWindow* window)
             window->draw(*txt);
         }
     }
-
-
     window->display();
-
 }
 
 //Priority 0-board, 1-on board

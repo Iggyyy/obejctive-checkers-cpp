@@ -10,7 +10,6 @@ class PieceWhite : public AbstractPiece
     public:
         //load texture and setup sprite
         void pi_init_texture_and_sprite();
-
         //Constructor
         PieceWhite()
         {
@@ -31,7 +30,6 @@ class PieceBlack : public AbstractPiece
     public:
         //load texture and setup sprite
         void pi_init_texture_and_sprite();
-
         //Constructor
         PieceBlack()
         {
@@ -55,7 +53,6 @@ class PieceDummy : public AbstractPiece
         {
             //do nothing
         }
-
         //Constructor
         PieceDummy()
         {
@@ -63,14 +60,3 @@ class PieceDummy : public AbstractPiece
             pi_set_piece_color(PieceColor::dummy);
         }
 };
-
-class PieceQueenBlack : public PieceBlack
-{
-    private:
-        //name of image in directory with extension
-        std::string m_image_pathname = "black_piece_queen.png";
-    void pi_init_texture_and_sprite(); 
-};
-
-
-
