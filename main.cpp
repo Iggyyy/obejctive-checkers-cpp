@@ -7,14 +7,9 @@
 #include "classes/gameplay_controller.h"
 #include "classes/game_ui_controller.h"
 
-// FOR NOW COMPILATION IS MANUAL
-// g++ -c main.cpp 
-// g++ main.o -o main -lsfml-graphics -lsfml-window -lsfml-system
-
 //TODO
 // queen
 // multiple choices
-
 // audio
 
 int main()

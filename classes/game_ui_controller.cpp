@@ -202,7 +202,7 @@ void GameUiController::resolve_frame_events()
             std::cerr<<"Trying to move from "<<m_origin_tile.first<<","<<m_origin_tile.second<<" to "
                                 <<rowcol.first<<","<<rowcol.second<<std::endl;
 
-            if(rowcol.first > 0) //check if legal move TODO 
+            if(rowcol.first >= 0)
             {
                 bool successfull_move;
 
@@ -262,6 +262,16 @@ void GameUiController::resolve_frame_events()
                             highlight_tile(m_has_to_attack_tile);
                         }
                     }
+
+                    // if(m_ui_texts[4].first == "turn_text")
+                    // {
+                    //     std::cerr<<"Turn changed"<<std::endl;
+                    //     if (m_whose_turn == 1)
+                    //         m_ui_texts[4].second->setString("Black");
+                    //     else
+                    //         m_ui_texts[4].second->setString("White");
+                    // }
+                    
                 }
                 else 
                 {
@@ -337,10 +347,10 @@ void GameUiController::load_all_ui_background_visuals()
     m_renderer_ref->gr_add_text_to_rendering(dead_pieces_text, 1);
 
     sf::Text* turn_header_text = create_text("turn_header_text", "Current player: ", start_x + 8, white_counter_y - 128, 32);
-    m_renderer_ref->gr_add_text_to_rendering(turn_header_text, 1);
+    //m_renderer_ref->gr_add_text_to_rendering(turn_header_text, 1);
 
     sf::Text* turn_text = create_text("turn_text", "black", start_x + 8, white_counter_y - 96, 32);
-    m_renderer_ref->gr_add_text_to_rendering(turn_text, 1);
+    //m_renderer_ref->gr_add_text_to_rendering(turn_text, 1);
     //--------------------------------------
 
 
@@ -422,8 +432,9 @@ void GameUiController::reset_game()
         {
             if(i.first == "dead_black" || i.first == "dead_white")
                 i.second->setString("0");
+
             if(i.first == "turn_text")
-                i.second->setString("black");
+                    i.second->setString("Black");
         }
 
     std::cerr<<"Game has been reseted!"<<std::endl;

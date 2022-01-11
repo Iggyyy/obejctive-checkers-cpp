@@ -79,11 +79,8 @@ std::vector< std::vector<AbstractPiece*> > GameplayController::gc_get_board()
 
 bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile)
 {
-    
-
     std::cout<<"BOARD"<<std::endl;
-    
-    
+     
     for (int i = 0; i<m_board.size(); i++)
     {
         std::cout<<i<<": ";
