@@ -69,3 +69,34 @@ PieceColor AbstractPiece::pi_get_piece_color()
 {
     return m_piece_color;
 }
+
+void AbstractPiece::change_to_queen()
+{
+    isQueen = true;
+    std::string filename = m_piece_color == PieceColor::black ? "black_piece_queen.png" : "white_piece_queen.png";
+
+
+    sf::Texture* texture = new sf::Texture();
+    if ( texture->loadFromFile("./source/" + filename)  )
+    {
+        texture->setSmooth(true);
+        pi_set_texture(texture);
+
+        sf::Sprite* sprite = new sf::Sprite();
+        sprite->setTexture(*texture);
+        sprite->setScale(0.125, 0.125); //scale down by 8 times to 64px
+        sprite->setPosition(m_sprite->getPosition());
+        pi_set_sprite(sprite);
+
+        std::cerr<<"Changed to QUEEN"<<std::endl;
+    }
+    else
+    {
+        std::cerr<<"Error while loading image as texture"<<std::endl;
+    }
+}
+
+bool AbstractPiece::is_queen()
+{
+    return isQueen;
+}

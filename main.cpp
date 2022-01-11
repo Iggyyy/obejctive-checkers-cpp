@@ -8,7 +8,6 @@
 #include "classes/game_ui_controller.h"
 
 //TODO
-// queen
 // multiple choices
 // audio
 

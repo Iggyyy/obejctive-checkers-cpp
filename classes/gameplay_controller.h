@@ -48,6 +48,10 @@ class GameplayController
         void gc_eliminate_piece(std::pair<int, int> tile);
         //Load basic setup
         void gc_load_start_setup();
+        //Check move
+        bool check_move_legal(std::pair<int, int> from_tile, std::pair<int, int> to_tile, bool is_attacking, int move_direction);
+        //Print Board
+        void print_board();
     public:
         //clear all variables and references
         void gc_reset_game();
@@ -63,5 +67,8 @@ class GameplayController
         bool gc_make_mandatory_attack_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile, std::pair<int, int> attack_tile);
         //Return 0 if not, 1 if white won, 2 if black won
         int gc_is_game_done();
+        //Check if create queen, if yes then do it
+        void check_make_queen(AbstractPiece* moving_piece, std::pair<int, int> to_tile);
+        bool move_queen(std::pair<int, int> from_tile, std::pair<int, int> to_tile);
         GameplayController();
 };

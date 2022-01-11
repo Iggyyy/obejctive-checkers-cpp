@@ -40,6 +40,7 @@ void GameUiController::load_pieces()
     
     std::cout<<"BOARD"<<std::endl;
     auto b = m_gameplay_controller_ref->gc_get_board();
+    b[3][0]->change_to_queen();
     
     for (int i = 0; i<b.size(); i++)
     {
@@ -223,18 +224,21 @@ void GameUiController::resolve_frame_events()
                         std::cerr<<"Piece has been killed"<<std::endl;
                         killed_any = true;
                         piece_killed_ui_broadcast(m_gameplay_controller_ref->gc_get_dead_piece_pointer()->pi_get_piece_color());
-                        
+                        std::cerr<<"Piece has been killed"<<std::endl;
                         m_renderer_ref->gr_remove_sprite_from_rendering(
                             m_gameplay_controller_ref->
                             gc_get_dead_piece_pointer()->
                             pi_get_sprite(), 
                             1
                             ); 
-
+                        std::cerr<<"Piece has been killed"<<std::endl;
                         m_gameplay_controller_ref->gc_reset_dead_piece_pointer(); 
                         un_highlight_tile();
                         check_game_over();
+                        std::cerr<<"Piece has been killed"<<std::endl;
                     }
+
+                    check_queen_conversion(m_grabbed_piece, rowcol);
 
                     if(killed_any)
                     {
@@ -263,15 +267,6 @@ void GameUiController::resolve_frame_events()
                         }
                     }
 
-                    // if(m_ui_texts[4].first == "turn_text")
-                    // {
-                    //     std::cerr<<"Turn changed"<<std::endl;
-                    //     if (m_whose_turn == 1)
-                    //         m_ui_texts[4].second->setString("Black");
-                    //     else
-                    //         m_ui_texts[4].second->setString("White");
-                    // }
-                    
                 }
                 else 
                 {
@@ -489,3 +484,19 @@ void GameUiController::play_sound(std::string sound_name)
     std::cerr<<"Sound been played"<<std::endl;
 }
 
+void GameUiController::check_queen_conversion(AbstractPiece* moving_piece, std::pair<int, int> to_tile)
+{
+    if ((to_tile.second == 0 && moving_piece->pi_get_piece_color() == PieceColor::white )
+        || (to_tile.second == 9 && moving_piece->pi_get_piece_color() == PieceColor::black))
+    {
+        m_renderer_ref->gr_remove_sprite_from_rendering(
+                            moving_piece->
+                            pi_get_sprite(), 
+                            1
+                            );
+
+        moving_piece->change_to_queen();
+        m_renderer_ref->gr_add_sprite_to_rendering(moving_piece->pi_get_sprite(), 1);
+    }   
+
+}

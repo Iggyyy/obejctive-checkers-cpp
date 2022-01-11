@@ -4,7 +4,6 @@
 #include <iostream>
 
 
-
 GameplayController::GameplayController()
 {
     //Init memory for vector
@@ -77,45 +76,8 @@ std::vector< std::vector<AbstractPiece*> > GameplayController::gc_get_board()
     return m_board;
 }
 
-bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile)
+bool GameplayController::check_move_legal(std::pair<int, int> from_tile, std::pair<int, int> to_tile, bool is_attacking, int move_direction)
 {
-    std::cout<<"BOARD"<<std::endl;
-     
-    for (int i = 0; i<m_board.size(); i++)
-    {
-        std::cout<<i<<": ";
-        for (int j = 0; j<m_board[0].size(); j++)
-        {
-            std::cout<<m_board[i][j]->pi_get_piece_color()<<" ";
-        }
-        std::cout<<std::endl;
-    }   
-    std::cout<<"BOARD END"<<std::endl;
-
-
-    AbstractPiece* piece_moving = get_reference_to_piece_at_board(from_tile.first, from_tile.second);
-    int move_direction = piece_moving->pi_get_move_direction();
-    
-    bool is_attacking = false;
-    int attack_row, attack_col; 
-    if(abs(to_tile.second - from_tile.second) == 2 && abs(to_tile.first - from_tile.first) == 2)
-    {
-        attack_row = (from_tile.second + to_tile.second ) /2;
-        attack_col = (from_tile.first + to_tile.first) /2;
-
-        if(get_reference_to_piece_at_board(attack_col, attack_row)->pi_get_piece_color() 
-            == piece_moving->pi_get_piece_color())
-        {
-            std::cerr<<"Cannot attack your piece"<<std::endl;
-            return false;
-        }
-
-        is_attacking = true;
-        //Check if can attack further
-    }
-    
-
-
     //Check if move is legal; if not return that it is illegal 
     // 1. bad direction
     if( (to_tile.second > from_tile.second) && move_direction != 1 && !is_attacking)
@@ -154,6 +116,126 @@ bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<i
         return false;
     }
 
+    return true;
+
+}
+
+void GameplayController::print_board()
+{
+    std::cout<<"BOARD"<<std::endl;
+     
+    for (int i = 0; i<m_board.size(); i++)
+    {
+        std::cout<<i<<": ";
+        for (int j = 0; j<m_board[0].size(); j++)
+        {
+            std::cout<<m_board[i][j]->pi_get_piece_color()<<" ";
+        }
+        std::cout<<std::endl;
+    }   
+    std::cout<<"BOARD END"<<std::endl;
+}
+
+bool GameplayController::move_queen(std::pair<int, int> from_tile, std::pair<int, int> to_tile)
+{
+    AbstractPiece* piece_moving = get_reference_to_piece_at_board(from_tile.first, from_tile.second);
+    //Check if legal
+    //Not taken
+    if (is_tile_taken(to_tile))
+        return false;
+    //On diagonal
+    if(abs(to_tile.first - from_tile.first) != abs(to_tile.second - from_tile.second)
+            && from_tile != to_tile)
+        return false;
+
+    //Check if jumping only over one
+    int x_dir = from_tile.first - to_tile.first > 0 ? 1 : -1;
+    int y_dir = from_tile.second - to_tile.second> 0 ? 1 : -1;
+    std::pair<int, int> current_tile = to_tile;
+    current_tile.first += x_dir;
+    current_tile.second += y_dir;
+
+    int found_pieces =0;
+    AbstractPiece* piece_to_kill;
+    std::pair<int, int> attack_tile;
+    std::cerr<<"Queen at: "<<from_tile.first<<" "<<from_tile.second<<std::endl;
+    std::cerr<<"Queen goes to: "<<to_tile.first<<" "<<to_tile.second<<std::endl;
+    while(current_tile.first != from_tile.first && current_tile.second != from_tile.second)
+    {
+        std::cerr<<"Check tiles: "<<current_tile.first<<" "<<current_tile.second<<std::endl;
+        AbstractPiece* p = get_reference_to_piece_at_board(current_tile.first, current_tile.second);
+        if(p->pi_get_piece_color() != PieceColor::dummy)
+        {
+            found_pieces++;
+            piece_to_kill = p;
+            attack_tile = current_tile;
+        }
+
+        if(p->pi_get_piece_color() == piece_moving->pi_get_piece_color())
+            return false;
+
+        current_tile.first += x_dir;
+        current_tile.second += y_dir;
+    }
+
+    if (found_pieces > 1)
+        return false;
+    
+    //MOVE
+    set_reference_at_board(new PieceDummy(), from_tile.second, from_tile.first);
+    set_reference_at_board(piece_moving, to_tile.second, to_tile.first);
+
+    //ATTACK
+    if (found_pieces == 1)
+    { 
+        std::cerr<<"Attacking at row"<<attack_tile.second<<" col"<< attack_tile.first<<std::endl;
+        m_ref_to_dead_piece = piece_to_kill;
+        set_reference_at_board(new PieceDummy(), attack_tile.second, attack_tile.first);
+    }
+
+    return true;
+
+}
+
+bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile)
+{
+    print_board();
+
+    AbstractPiece* piece_moving = get_reference_to_piece_at_board(from_tile.first, from_tile.second);
+    int move_direction = piece_moving->pi_get_move_direction();
+
+    if (piece_moving->is_queen())
+    {
+        std::cerr<<"Try to move queen"<<std::endl;
+        bool moved = move_queen(from_tile, to_tile);
+        return moved;
+    }
+
+
+    bool is_attacking = false;
+    int attack_row, attack_col; 
+    if(abs(to_tile.second - from_tile.second) == 2 && abs(to_tile.first - from_tile.first) == 2)
+    {
+        attack_row = (from_tile.second + to_tile.second ) /2;
+        attack_col = (from_tile.first + to_tile.first) /2;
+
+        if(get_reference_to_piece_at_board(attack_col, attack_row)->pi_get_piece_color() 
+            == piece_moving->pi_get_piece_color())
+        {
+            std::cerr<<"Cannot attack your piece"<<std::endl;
+            return false;
+        }
+
+        is_attacking = true;
+        //Check if can attack further
+    }
+    
+    //Check if move is legal
+    bool legal = check_move_legal(from_tile, to_tile, is_attacking, move_direction);
+    if (legal == false)
+        return false;
+
+    
     //If legal then do the move
     set_reference_at_board(new PieceDummy(), from_tile.second, from_tile.first);
     set_reference_at_board(piece_moving, to_tile.second, to_tile.first);
@@ -167,6 +249,18 @@ bool GameplayController::gc_make_move(std::pair<int, int> from_tile, std::pair<i
     }
     
     return true;
+}
+
+void GameplayController::check_make_queen(AbstractPiece* moving_piece, std::pair<int, int> to_tile)
+{
+    //is on the edge
+    if ((to_tile.second == 0 && moving_piece->pi_get_piece_color() == PieceColor::white )
+        || (to_tile.second == 9 && moving_piece->pi_get_piece_color() == PieceColor::black))
+    {
+        moving_piece->change_to_queen();
+    }   
+
+
 }
 
 bool GameplayController::gc_make_mandatory_attack_move(std::pair<int, int> from_tile, std::pair<int, int> to_tile, std::pair<int, int> attack_tile)

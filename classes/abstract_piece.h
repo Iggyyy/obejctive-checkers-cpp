@@ -24,6 +24,8 @@ class AbstractPiece
         int m_render_priority;
         //piece color enum
         PieceColor m_piece_color;
+        //is queen
+        bool isQueen = false;
     protected:
         void pi_set_piece_color(PieceColor color);
         void pi_set_move_direction(int direction);
@@ -44,5 +46,8 @@ class AbstractPiece
         PieceColor pi_get_piece_color();
         //Set sprite render position
         void set_sprite_position(int row, int col);
+        //Change to queen
+        void change_to_queen();
+        bool is_queen();
 };
 

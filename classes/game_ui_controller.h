@@ -57,6 +57,7 @@ class GameUiController
         void load_all_ui_background_visuals();
         void load_pieces();
         void resolve_frame_events();
+        void check_queen_conversion(AbstractPiece* moving_piece, std::pair<int, int> to_tile);
         GameUiController(GraphicsRenderer* renderer_ref, 
                             GameplayController *gameplay_controller_ref,
                             sf::RenderWindow* window)
