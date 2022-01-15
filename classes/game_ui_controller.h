@@ -70,7 +70,6 @@ class GameUiController
             load_all_ui_background_visuals();
             load_board_tiles_and_add_to_render();
             //load_audio(); 
-
         }
 };
 

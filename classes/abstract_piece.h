@@ -6,7 +6,6 @@ enum PieceColor
     dummy,
     white,
     black
-    
 };
 
 class AbstractPiece

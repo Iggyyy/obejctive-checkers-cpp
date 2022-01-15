@@ -7,9 +7,6 @@
 #include "classes/gameplay_controller.h"
 #include "classes/game_ui_controller.h"
 
-//TODO
-// multiple choices
-// audio
 
 int main()
 {
@@ -25,9 +22,7 @@ int main()
     {
         gameUiController.resolve_frame_events();
         graphicsRenderer.gr_render_whole_scene(&window); 
-        
         frames_passed > frames_target ? frames_passed = 0 : frames_passed++;
     }
     return 0;
 }
-

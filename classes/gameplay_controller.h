@@ -19,8 +19,7 @@ class GameplayController
         }
         AbstractPiece* get_reference_to_piece_at_board(int row, int col)
         {
-            //std::cerr<<"Getting ref at row"<<col<<" col"<<row<<""<<std::endl;
-           
+            //std::cerr<<"Getting ref at row"<<col<<" col"<<row<<""<<std::endl;  
             return m_board[col][row];
         }
         int get_board_size()
@@ -29,7 +28,6 @@ class GameplayController
         }
         bool is_tile_taken(std::pair<int, int> tile)
         { 
-            
             if (m_board[tile.second][tile.first]->pi_get_piece_color() == PieceColor::dummy)
                 return false;
             std::cerr<<"Tile "<<tile.second<<" "<<tile.first<<" is taken"<<std::endl;
