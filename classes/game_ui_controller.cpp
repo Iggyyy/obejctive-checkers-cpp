@@ -39,7 +39,7 @@ void GameUiController::load_pieces()
 {
     std::cout<<"BOARD"<<std::endl;
     auto b = m_gameplay_controller_ref->gc_get_board();
-    b[3][0]->change_to_queen();
+    //b[3][0]->change_to_queen();
     
     for (int i = 0; i<b.size(); i++)
     {
